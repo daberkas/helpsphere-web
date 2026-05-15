@@ -1,0 +1,317 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: #f4f7fb;
+  color: #1f2937;
+  line-height: 1.6;
+}
+
+.header {
+  background: linear-gradient(135deg, #2563eb, #14b8a6);
+  color: white;
+  padding-bottom: 4rem;
+}
+
+.navbar {
+  max-width: 1180px;
+  margin: auto;
+  padding: 1.2rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logo-icon {
+  font-size: 1.8rem;
+}
+
+.nav-actions {
+  display: flex;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+
+.hero {
+  max-width: 1180px;
+  margin: auto;
+  padding: 4rem 1.5rem 1rem;
+  display: grid;
+  grid-template-columns: 1.4fr 0.8fr;
+  gap: 2rem;
+  align-items: center;
+}
+
+.hero-content h1 {
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  line-height: 1.05;
+  margin-bottom: 1rem;
+}
+
+.hero-content p {
+  font-size: 1.15rem;
+  max-width: 650px;
+  margin-bottom: 1.8rem;
+  opacity: 0.95;
+}
+
+.hero-card {
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(12px);
+  border-radius: 24px;
+  padding: 2rem;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.18);
+}
+
+.hero-card h3 {
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.stats {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.stats div {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 1rem;
+  border-radius: 18px;
+  flex: 1;
+}
+
+.stats strong {
+  font-size: 2rem;
+  display: block;
+}
+
+.container {
+  max-width: 1180px;
+  margin: -2rem auto 0;
+  padding: 0 1.5rem 3rem;
+}
+
+.card {
+  background: white;
+  border-radius: 22px;
+  padding: 1.5rem;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+}
+
+.auth-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.status-box {
+  background: white;
+  border-left: 5px solid #2563eb;
+  padding: 1rem 1.3rem;
+  border-radius: 16px;
+  margin-bottom: 2rem;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
+}
+
+#messageBox {
+  font-weight: 600;
+  margin-top: 0.3rem;
+}
+
+.section {
+  margin-top: 2.5rem;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.section-header h2 {
+  font-size: 1.8rem;
+}
+
+.small-text {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  border: 1px solid #dbe3ef;
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
+  margin-bottom: 0.8rem;
+  font-size: 1rem;
+  outline: none;
+  background: #f8fafc;
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #2563eb;
+  background: white;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+}
+
+.form-card {
+  max-width: 760px;
+}
+
+.btn {
+  border: none;
+  border-radius: 999px;
+  padding: 0.8rem 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn-primary {
+  background: #ffffff;
+  color: #2563eb;
+}
+
+.container .btn-primary,
+.card .btn-primary {
+  background: #2563eb;
+  color: white;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid currentColor;
+  color: inherit;
+}
+
+.container .btn-outline {
+  color: #2563eb;
+  background: white;
+}
+
+.btn-danger {
+  background: #ef4444;
+  color: white;
+}
+
+.full {
+  width: 100%;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.chip {
+  background: white;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+  padding: 0.7rem 1rem;
+  border-radius: 999px;
+  font-weight: 700;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.2rem;
+}
+
+.publicacion-card {
+  background: white;
+  border-radius: 22px;
+  padding: 1.4rem;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+  border-top: 5px solid #14b8a6;
+}
+
+.publicacion-card h3 {
+  margin-bottom: 0.5rem;
+  color: #0f172a;
+}
+
+.badges {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin: 1rem 0;
+}
+
+.badge {
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: #e0f2fe;
+  color: #0369a1;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+}
+
+.badge.estado {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.badge.puntos {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.footer {
+  text-align: center;
+  padding: 2rem;
+  color: #64748b;
+}
+
+@media (max-width: 760px) {
+  .hero,
+  .auth-grid,
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .navbar {
+    align-items: flex-start;
+    gap: 1rem;
+    flex-direction: column;
+  }
+}

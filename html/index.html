@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HelpSphere | Banco de tiempo solidario</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <header class="header">
+    <nav class="navbar">
+      <div class="logo">
+        <span class="logo-icon">🤝</span>
+        <span>HelpSphere</span>
+      </div>
+
+      <div class="nav-actions">
+        <button id="btnShowLogin" class="btn btn-outline">Iniciar sesión</button>
+        <button id="btnShowRegister" class="btn btn-primary">Registrarse</button>
+        <button id="btnLogout" class="btn btn-danger hidden">Cerrar sesión</button>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Ayuda cercana, confianza real</h1>
+        <p>
+          HelpSphere conecta personas que necesitan ayuda con usuarios dispuestos
+          a ofrecer su tiempo mediante un sistema de puntos y reputación.
+        </p>
+        <button id="btnScrollPublicaciones" class="btn btn-primary">
+          Ver publicaciones
+        </button>
+      </div>
+
+      <div class="hero-card">
+        <h3>Banco de tiempo</h3>
+        <p>Gana puntos ayudando y úsalos cuando necesites apoyo.</p>
+        <div class="stats">
+          <div>
+            <strong id="publicacionesCount">0</strong>
+            <span>publicaciones</span>
+          </div>
+          <div>
+            <strong id="categoriasCount">0</strong>
+            <span>categorías</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </header>
+
+  <main class="container">
+
+    <section id="authSection" class="auth-grid">
+
+      <form id="loginForm" class="card hidden">
+        <h2>Iniciar sesión</h2>
+        <input type="email" id="loginEmail" placeholder="Correo electrónico" required />
+        <input type="password" id="loginPassword" placeholder="Contraseña" required />
+        <button type="submit" class="btn btn-primary full">Entrar</button>
+      </form>
+
+      <form id="registerForm" class="card hidden">
+        <h2>Crear cuenta</h2>
+        <input type="text" id="registerNombre" placeholder="Nombre" required />
+        <input type="text" id="registerApellidos" placeholder="Apellidos" />
+        <input type="email" id="registerEmail" placeholder="Correo electrónico" required />
+        <input type="password" id="registerPassword" placeholder="Contraseña" required />
+        <input type="text" id="registerZona" placeholder="Zona" />
+        <button type="submit" class="btn btn-primary full">Registrarme</button>
+      </form>
+
+    </section>
+
+    <section class="status-box">
+      <p id="sessionStatus">No has iniciado sesión.</p>
+      <p id="messageBox"></p>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <h2>Categorías</h2>
+        <button id="btnLoadCategorias" class="btn btn-outline">Actualizar</button>
+      </div>
+      <div id="categoriasContainer" class="chips"></div>
+    </section>
+
+    <section id="publicacionesSection" class="section">
+      <div class="section-header">
+        <h2>Publicaciones disponibles</h2>
+        <button id="btnLoadPublicaciones" class="btn btn-outline">Actualizar</button>
+      </div>
+      <div id="publicacionesContainer" class="cards-grid"></div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <h2>Crear publicación</h2>
+        <span class="small-text">Requiere iniciar sesión</span>
+      </div>
+
+      <form id="publicacionForm" class="card form-card">
+        <input type="text" id="titulo" placeholder="Título" required />
+        <textarea id="descripcion" placeholder="Descripción" required></textarea>
+
+        <div class="form-row">
+          <select id="tipoPublicacion" required>
+            <option value="SOLICITUD">Solicitud</option>
+            <option value="OFERTA">Oferta</option>
+          </select>
+
+          <select id="categoria" required></select>
+        </div>
+
+        <div class="form-row">
+          <input type="text" id="zona" placeholder="Zona" required />
+          <input type="number" id="puntosEstimados" placeholder="Puntos" min="0" required />
+        </div>
+
+        <input type="datetime-local" id="fechaServicio" />
+
+        <button type="submit" class="btn btn-primary full">
+          Publicar
+        </button>
+      </form>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>HelpSphere · Proyecto DAM · David Bermúdez Castillo</p>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
