@@ -3,18 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HelpSphere | Banco de tiempo solidario</title>
+  <title>HelpSphere | Cliente web</title>
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-
   <header class="header">
     <nav class="navbar">
-      <div class="logo">
-        <span class="logo-icon">🤝</span>
-        <span>HelpSphere</span>
-      </div>
-
+      <div class="logo"><span class="logo-icon">🤝</span><span>HelpSphere</span></div>
       <div class="nav-actions">
         <button id="btnShowLogin" class="btn btn-outline">Iniciar sesión</button>
         <button id="btnShowRegister" class="btn btn-primary">Registrarse</button>
@@ -24,37 +19,26 @@
 
     <section class="hero">
       <div class="hero-content">
+        <span class="eyebrow">Banco de tiempo solidario</span>
         <h1>Ayuda cercana, confianza real</h1>
-        <p>
-          HelpSphere conecta personas que necesitan ayuda con usuarios dispuestos
-          a ofrecer su tiempo mediante un sistema de puntos y reputación.
-        </p>
-        <button id="btnScrollPublicaciones" class="btn btn-primary">
-          Ver publicaciones
-        </button>
+        <p>Cliente web funcional conectado a la API REST de HelpSphere, con autenticación Firebase y gestión de publicaciones, solicitudes, perfil, puntos y valoraciones.</p>
+        <div class="hero-actions">
+          <button id="btnScrollPublicaciones" class="btn btn-primary">Ver publicaciones</button>
+          <button id="btnScrollPanel" class="btn btn-outline">Ir al panel</button>
+        </div>
       </div>
-
       <div class="hero-card">
-        <h3>Banco de tiempo</h3>
-        <p>Gana puntos ayudando y úsalos cuando necesites apoyo.</p>
+        <h3>Estado de la plataforma</h3>
         <div class="stats">
-          <div>
-            <strong id="publicacionesCount">0</strong>
-            <span>publicaciones</span>
-          </div>
-          <div>
-            <strong id="categoriasCount">0</strong>
-            <span>categorías</span>
-          </div>
+          <div><strong id="publicacionesCount">0</strong><span>publicaciones</span></div>
+          <div><strong id="categoriasCount">0</strong><span>categorías</span></div>
         </div>
       </div>
     </section>
   </header>
 
-  <main class="container">
-
+  <main class="container" id="panel">
     <section id="authSection" class="auth-grid">
-
       <form id="loginForm" class="card hidden">
         <h2>Iniciar sesión</h2>
         <input type="email" id="loginEmail" placeholder="Correo electrónico" required />
@@ -71,7 +55,6 @@
         <input type="text" id="registerZona" placeholder="Zona" />
         <button type="submit" class="btn btn-primary full">Registrarme</button>
       </form>
-
     </section>
 
     <section class="status-box">
@@ -81,7 +64,7 @@
 
     <section class="section">
       <div class="section-header">
-        <h2>Categorías</h2>
+        <div><h2>Categorías</h2><p class="section-subtitle">Datos públicos usados para clasificar las publicaciones.</p></div>
         <button id="btnLoadCategorias" class="btn btn-outline">Actualizar</button>
       </div>
       <div id="categoriasContainer" class="chips"></div>
@@ -89,50 +72,107 @@
 
     <section id="publicacionesSection" class="section">
       <div class="section-header">
-        <h2>Publicaciones disponibles</h2>
+        <div><h2>Publicaciones disponibles</h2><p class="section-subtitle">Consulta pública de solicitudes y ofertas.</p></div>
         <button id="btnLoadPublicaciones" class="btn btn-outline">Actualizar</button>
+      </div>
+      <div class="filters card compact-card">
+        <input type="text" id="filterText" placeholder="Buscar por título, descripción o zona" />
+        <select id="filterCategoria"><option value="">Todas las categorías</option></select>
+        <select id="filterTipo"><option value="">Todos los tipos</option><option value="SOLICITUD">Solicitudes</option><option value="OFERTA">Ofertas</option></select>
+        <button id="btnClearFilters" class="btn btn-outline">Limpiar</button>
       </div>
       <div id="publicacionesContainer" class="cards-grid"></div>
     </section>
 
     <section class="section">
       <div class="section-header">
-        <h2>Crear publicación</h2>
-        <span class="small-text">Requiere iniciar sesión</span>
+        <div><h2>Crear publicación</h2><p class="section-subtitle">El usuario creador se asigna automáticamente desde el token JWT.</p></div>
+        <span class="small-text">Requiere sesión</span>
       </div>
-
       <form id="publicacionForm" class="card form-card">
+        <input type="hidden" id="editPublicacionId" />
         <input type="text" id="titulo" placeholder="Título" required />
         <textarea id="descripcion" placeholder="Descripción" required></textarea>
-
         <div class="form-row">
-          <select id="tipoPublicacion" required>
-            <option value="SOLICITUD">Solicitud</option>
-            <option value="OFERTA">Oferta</option>
-          </select>
-
+          <select id="tipoPublicacion" required><option value="SOLICITUD">Solicitud</option><option value="OFERTA">Oferta</option></select>
           <select id="categoria" required></select>
         </div>
-
         <div class="form-row">
           <input type="text" id="zona" placeholder="Zona" required />
           <input type="number" id="puntosEstimados" placeholder="Puntos" min="0" required />
         </div>
-
-        <input type="datetime-local" id="fechaServicio" />
-
-        <button type="submit" class="btn btn-primary full">
-          Publicar
-        </button>
+        <div class="form-row">
+          <select id="estadoPublicacion"><option value="ABIERTA">ABIERTA</option><option value="ASIGNADA">ASIGNADA</option><option value="COMPLETADA">COMPLETADA</option><option value="CANCELADA">CANCELADA</option></select>
+          <input type="datetime-local" id="fechaServicio" />
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Guardar publicación</button>
+          <button type="button" id="btnCancelEdit" class="btn btn-outline hidden">Cancelar edición</button>
+        </div>
       </form>
     </section>
 
+    <section class="section dashboard-grid">
+      <article class="card">
+        <div class="section-header inline"><h2>Mi perfil</h2><button id="btnLoadPerfil" class="btn btn-outline">Actualizar</button></div>
+        <div id="perfilContainer" class="info-list"></div>
+        <form id="perfilForm" class="mini-form">
+          <input type="text" id="perfilNombre" placeholder="Nombre" />
+          <input type="text" id="perfilApellidos" placeholder="Apellidos" />
+          <input type="text" id="perfilTelefono" placeholder="Teléfono" />
+          <input type="text" id="perfilZona" placeholder="Zona" />
+          <textarea id="perfilDescripcion" placeholder="Descripción"></textarea>
+          <button type="submit" class="btn btn-primary full">Actualizar perfil</button>
+        </form>
+      </article>
+
+      <article class="card">
+        <div class="section-header inline"><h2>Mis puntos</h2><button id="btnLoadPuntos" class="btn btn-outline">Actualizar</button></div>
+        <div id="puntosContainer" class="info-list"></div>
+      </article>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <div><h2>Solicitudes de participación</h2><p class="section-subtitle">Solicitudes enviadas por mí y recibidas en mis publicaciones.</p></div>
+        <button id="btnLoadSolicitudes" class="btn btn-outline">Actualizar</button>
+      </div>
+      <div id="solicitudesContainer" class="cards-grid"></div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <div><h2>Valoraciones</h2><p class="section-subtitle">Consulta y creación de valoraciones entre usuarios.</p></div>
+        <button id="btnLoadValoraciones" class="btn btn-outline">Actualizar</button>
+      </div>
+      <form id="valoracionForm" class="card form-card">
+        <div class="form-row">
+          <input type="number" id="valoracionPublicacion" placeholder="ID publicación" required />
+          <input type="number" id="valoracionReceptor" placeholder="ID usuario receptor" required />
+        </div>
+        <div class="form-row">
+          <input type="number" id="valoracionPuntuacion" min="1" max="5" placeholder="Puntuación 1-5" required />
+          <input type="text" id="valoracionComentario" placeholder="Comentario" />
+        </div>
+        <button type="submit" class="btn btn-primary full">Registrar valoración</button>
+      </form>
+      <div id="valoracionesContainer" class="cards-grid"></div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <div><h2>Zona de Administradores</h2><p class="section-subtitle">Gestión de usuarios, roles y categorías disponibles en la API.</p></div>
+        <div class="button-row">
+          <button id="btnLoadUsuarios" class="btn btn-outline">Usuarios</button>
+          <button id="btnLoadRoles" class="btn btn-outline">Roles</button>
+          <button id="btnLoadAdminCategorias" class="btn btn-outline">Gestionar categorías</button>
+        </div>
+      </div>
+      <div id="auxContainer" class="table-wrapper"></div>
+    </section>
   </main>
 
-  <footer class="footer">
-    <p>HelpSphere · Proyecto DAM · David Bermúdez Castillo</p>
-  </footer>
-
+  <footer class="footer"><p>HelpSphere · Proyecto DAM · David Bermúdez Castillo</p></footer>
   <script src="js/app.js"></script>
 </body>
 </html>
