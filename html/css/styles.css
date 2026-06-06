@@ -204,3 +204,25 @@ th { background: #f8fafc; color: #334155; }
 #valoracionesContainer {
     margin-top: 2rem;
 }
+
+.toast {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  background: #0f172a;
+  color: white;
+  padding: 1rem 1.25rem;
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  font-weight: 700;
+  z-index: 9999;
+  max-width: 360px;
+}
+
+.toast.error {
+  background: var(--danger);
+}
+
+.toast.success {
+  background: var(--success);
+}

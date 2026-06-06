@@ -60,6 +60,20 @@ function showMessage(message, isError = false) {
   els.messageBox.textContent = message;
   els.messageBox.style.color = isError ? "#dc2626" : "#16a34a";
 }
+
+function showToast(message, isError = false) {
+  const toast = $("toast");
+  if (!toast) return;
+
+  toast.textContent = message;
+  toast.className = `toast ${isError ? "error" : "success"}`;
+
+  clearTimeout(showToast.timeout);
+  showToast.timeout = setTimeout(() => {
+    toast.classList.add("hidden");
+  }, 1500);
+}
+
 function escapeHtml(value) {
   if (value === null || value === undefined) return "";
   return String(value)
@@ -118,6 +132,7 @@ async function apiRequest(endpoint, options = {}) {
 function requireLogin() {
   if (!getToken()) {
     showMessage("Debes iniciar sesión para realizar esta operación.", true);
+    showToast("Debes iniciar sesión para realizar esta operación.", true);
     return false;
   }
   return true;
@@ -134,6 +149,7 @@ els.btnShowRegister.addEventListener("click", () => {
 els.btnLogout.addEventListener("click", () => {
   clearSession();
   showMessage("Sesión cerrada correctamente.");
+  showToast("Sesión cerrada correctamente.");
   renderPerfil();
   renderPuntos([]);
   els.solicitudesContainer.innerHTML = "";
@@ -150,11 +166,13 @@ els.loginForm.addEventListener("submit", async (event) => {
     const data = await apiRequest("/auth/login", { method: "POST", body: JSON.stringify(body) });
     setSession(data.idToken, data.usuario);
     showMessage("Inicio de sesión correcto.");
+    showToast("Inicio de sesión correcto.");
     els.loginForm.reset();
     els.loginForm.classList.add("hidden");
     await Promise.allSettled([cargarPublicaciones(), cargarPerfil(), cargarPuntos(), cargarSolicitudes(), cargarValoraciones()]);
   } catch (error) {
     showMessage("Error al iniciar sesión. Revisa las credenciales.", true);
+    showToast("Error al iniciar sesión. Revisa las credenciales.", true);
     console.error(error);
   }
 });
@@ -172,11 +190,13 @@ els.registerForm.addEventListener("submit", async (event) => {
     const data = await apiRequest("/auth/register", { method: "POST", body: JSON.stringify(body) });
     setSession(data.idToken, data.usuario);
     showMessage("Registro completado correctamente.");
+    showToast("Registro completado correctamente.");
     els.registerForm.reset();
     els.registerForm.classList.add("hidden");
     await Promise.allSettled([cargarPublicaciones(), cargarPerfil(), cargarPuntos()]);
   } catch (error) {
     showMessage("Error al registrar usuario.", true);
+    showToast("Error al registrar usuario.", true);
     console.error(error);
   }
 });
@@ -212,6 +232,7 @@ async function cargarCategorias() {
     els.categoriasCount.textContent = categoriasCache.length;
   } catch (error) {
     showMessage("No se pudieron cargar las categorías.", true);
+    showToast("No se pudieron cargar las categorías.", true);
     console.error(error);
   }
 }
@@ -222,6 +243,7 @@ async function cargarPublicaciones() {
     renderPublicaciones();
   } catch (error) {
     showMessage("No se pudieron cargar las publicaciones.", true);
+    showToast("No se pudieron cargar las publicaciones.", true);
     console.error(error);
   }
 }
@@ -314,6 +336,7 @@ function prepararValoracion(publicacion) {
 
   if (!solicitudAceptada) {
     showMessage("No existe una solicitud aceptada para esta publicación.", true);
+    showToast("No existe una solicitud aceptada para esta publicación.", true);
     return;
   }
 
@@ -329,6 +352,7 @@ function prepararValoracion(publicacion) {
   showMessage(
     `Valoración preparada para la publicación "${publicacion.titulo}" y el usuario ${nombreSolicitante || solicitudAceptada.idUsuarioSolicitante}.`
   );
+  showToast(`Valoración preparada para la publicación "${publicacion.titulo}" y el usuario ${nombreSolicitante || solicitudAceptada.idUsuarioSolicitante}.`);
 
   $("valoracionPuntuacion").focus();
 
@@ -345,9 +369,11 @@ async function solicitarParticipacion(idPublicacion) {
       body: JSON.stringify({ mensaje, idPublicacion })
     });
     showMessage("Solicitud enviada correctamente.");
+    showToast("Solicitud enviada correctamente.");
     await cargarSolicitudes();
   } catch (error) {
     showMessage("No se pudo enviar la solicitud.", true);
+    showToast("No se pudo enviar la solicitud.", true);
     console.error(error);
   }
 }
@@ -396,10 +422,12 @@ els.publicacionForm.addEventListener("submit", async (event) => {
     if (id) {
       await apiRequest(`/publicaciones/${id}`, { method: "PUT", body: JSON.stringify(body) });
       showMessage("Publicación actualizada correctamente.");
+      showToast("Publicación actualizada correctamente.");
     } else {
       delete body.idPublicacion;
       await apiRequest("/publicaciones", { method: "POST", body: JSON.stringify(body) });
       showMessage("Publicación creada correctamente.");
+      showToast("Publicación creada correctamente.");
     }
     limpiarFormularioPublicacion();
     await cargarSolicitudes();
@@ -417,6 +445,7 @@ els.publicacionForm.addEventListener("submit", async (event) => {
     }
   } catch (error) {
     showMessage("Error al guardar la publicación.", true);
+    showToast("Error al guardar la publicación.", true);
     console.error(error);
   }
 });
@@ -427,9 +456,11 @@ async function eliminarPublicacion(id) {
   try {
     await apiRequest(`/publicaciones/${id}`, { method: "DELETE" });
     showMessage("Publicación eliminada correctamente.");
+    showToast("Publicación eliminada correctamente.");
     await cargarPublicaciones();
   } catch (error) {
     showMessage("No se pudo eliminar la publicación.", true);
+    showToast("No se pudo eliminar la publicación.", true);
     console.error(error);
   }
 }
@@ -496,10 +527,12 @@ async function actualizarSolicitud(id, estado) {
       body: JSON.stringify({ idSolicitud: id, estado })
     });
     showMessage(`Solicitud ${estado.toLowerCase()} correctamente.`);
+    showToast(`Solicitud ${estado.toLowerCase()} correctamente.`);
     await cargarSolicitudes();
     await cargarPublicaciones();
   } catch (error) {
     showMessage("No se pudo actualizar la solicitud. Solo el creador de la publicación puede aceptarla o rechazarla.", true);
+    showToast("No se pudo actualizar la solicitud. Solo el creador de la publicación puede aceptarla o rechazarla.", true);
     console.error(error);
   }
 }
@@ -510,10 +543,12 @@ async function cancelarSolicitud(id) {
   try {
     await apiRequest(`/solicitudesparticipacion/${id}`, { method: "DELETE" });
     showMessage("Solicitud cancelada correctamente.");
+    showToast("Solicitud cancelada correctamente.");
     await cargarSolicitudes();
     await cargarPublicaciones();
   } catch (error) {
     showMessage("No se pudo cancelar la solicitud. Solo el solicitante puede cancelarla.", true);
+    showToast("No se pudo cancelar la solicitud. Solo el solicitante puede cancelarla.", true);
     console.error(error);
   }
 }
@@ -570,9 +605,11 @@ els.perfilForm.addEventListener("submit", async (event) => {
   try {
     await apiRequest(`/usuarios/${user.idUsuario}`, { method: "PUT", body: JSON.stringify(body) });
     showMessage("Perfil actualizado correctamente.");
+    showToast("Perfil actualizado correctamente.");
     await cargarPerfil();
   } catch (error) {
     showMessage("No se pudo actualizar el perfil.", true);
+    showToast("No se pudo actualizar el perfil.", true);
     console.error(error);
   }
 });
@@ -660,12 +697,14 @@ els.valoracionForm.addEventListener("submit", async (event) => {
   try {
     await apiRequest("/valoraciones", { method: "POST", body: JSON.stringify(body) });
     showMessage("Valoración registrada correctamente.");
+    showToast("Valoración registrada correctamente.");
     els.valoracionForm.reset();
     await cargarValoraciones();
     await cargarPuntos();
     await cargarPerfil();
   } catch (error) {
     showMessage("No se pudo registrar la valoración.", true);
+    showToast("No se pudo registrar la valoración.", true);
     console.error(error);
   }
 });
@@ -679,6 +718,7 @@ async function cargarUsuarios() {
   if (!esAdmin()) {
     els.auxContainer.innerHTML = "";
     showMessage("Solo los administradores pueden consultar usuarios.", true);
+    showToast("Solo los administradores pueden consultar usuarios.", true);
     return;
   }
 
@@ -687,6 +727,7 @@ async function cargarUsuarios() {
     renderUsuariosAdmin(usuarios);
   } catch (error) {
     showMessage("No se pudieron cargar los usuarios.", true);
+    showToast("No se pudieron cargar los usuarios.", true);
     console.error(error);
   }
 }
@@ -696,6 +737,7 @@ async function cargarRoles() {
   if (!esAdmin()) {
     els.auxContainer.innerHTML = "";
     showMessage("Solo los administradores pueden consultar roles.", true);
+    showToast("Solo los administradores pueden consultar roles.", true);
     return;
   }
 
@@ -704,6 +746,7 @@ async function cargarRoles() {
     renderTable(roles, ["idRol", "nombreRol"]);
   } catch (error) {
     showMessage("No se pudieron cargar los roles.", true);
+    showToast("No se pudieron cargar los roles.", true);
     console.error(error);
   }
 }
@@ -765,6 +808,7 @@ function renderAdminCategorias() {
   if (!esAdmin()) {
     els.auxContainer.innerHTML = "";
     showMessage("Solo los administradores pueden gestionar categorías.", true);
+    showToast("Solo los administradores pueden gestionar categorías.", true);
     return;
   }
 
@@ -818,10 +862,12 @@ async function crearCategoriaAdmin(event) {
     });
 
     showMessage("Categoría creada correctamente.");
+    showToast("Categoría creada correctamente.");
     await cargarCategorias();
     renderAdminCategorias();
   } catch (error) {
     showMessage("No se pudo crear la categoría.", true);
+    showToast("No se pudo crear la categoría.", true);
     console.error(error);
   }
 }
@@ -837,11 +883,13 @@ async function eliminarCategoriaAdmin(idCategoria) {
     });
 
     showMessage("Categoría eliminada correctamente.");
+    showToast("Categoría eliminada correctamente.");
     await cargarCategorias();
     await cargarPublicaciones();
     renderAdminCategorias();
   } catch (error) {
     showMessage("No se pudo eliminar la categoría. Puede tener publicaciones asociadas.", true);
+    showToast("No se pudo eliminar la categoría. Puede tener publicaciones asociadas.", true);
     console.error(error);
   }
 }
@@ -858,9 +906,11 @@ async function cambiarEstadoUsuario(idUsuario, activo) {
     });
 
     showMessage(activo ? "Usuario activado correctamente." : "Usuario bloqueado correctamente.");
+    showToast(activo ? "Usuario activado correctamente." : "Usuario bloqueado correctamente.");
     await cargarUsuarios();
   } catch (error) {
     showMessage("No se pudo cambiar el estado del usuario.", true);
+    showToast("No se pudo cambiar el estado del usuario.", true);
     console.error(error);
   }
 }
