@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>HelpSphere | Cliente web</title>
-  <link rel="stylesheet" href="css/styles.css?v=5" />
+  <link rel="stylesheet" href="css/styles.css?v=6" />
 </head>
 <body>
   <header class="header">
@@ -147,14 +147,21 @@
       </div>
       <form id="valoracionForm" class="card form-card">
         <div class="form-row">
-          <input type="number" id="valoracionPublicacion" placeholder="ID publicación" required />
-          <input type="number" id="valoracionReceptor" placeholder="ID usuario receptor" required />
+          <input type="number" id="valoracionPublicacion" placeholder="ID publicación" required readonly/>
+          <input type="number" id="valoracionReceptor" placeholder="ID usuario receptor" required readonly/>
         </div>
         <div class="form-row">
-          <input type="number" id="valoracionPuntuacion" min="1" max="5" placeholder="Puntuación 1-5" required />
-          <input type="text" id="valoracionComentario" placeholder="Comentario" />
+          <input type="number" id="valoracionPuntuacion" min="1" max="5" placeholder="Puntuación 1-5" required disabled/>
+          <input type="text" id="valoracionComentario" placeholder="Comentario" disabled/>
         </div>
-        <button type="submit" class="btn btn-primary full">Registrar valoración</button>
+        <button 
+            type="submit" 
+            id="btnRegistrarValoracion" 
+            class="btn btn-primary full" 
+            disabled
+            title="Primero debes completar una publicación y pulsar 'Valorar usuario'.">
+            Registrar valoración
+        </button>
       </form>
       <div id="valoracionesContainer" class="cards-grid"></div>
     </section>
@@ -173,7 +180,7 @@
   </main>
 
   <footer class="footer"><p>HelpSphere · Proyecto DAM · David Bermúdez Castillo</p></footer>
-  <script src="js/app.js?v=5"></script>
+  <script src="js/app.js?v=6"></script>
   <div id="toast" class="toast hidden"></div>
 </body>
 </html>

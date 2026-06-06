@@ -22,6 +22,9 @@ const els = {
   publicacionForm: $("publicacionForm"),
   perfilForm: $("perfilForm"),
   valoracionForm: $("valoracionForm"),
+  btnRegistrarValoracion: $("btnRegistrarValoracion"),
+  valoracionPuntuacion: $("valoracionPuntuacion"),
+  valoracionComentario: $("valoracionComentario"),
   messageBox: $("messageBox"),
   sessionStatus: $("sessionStatus"),
   categoriasContainer: $("categoriasContainer"),
@@ -72,6 +75,15 @@ function showToast(message, isError = false) {
   showToast.timeout = setTimeout(() => {
     toast.classList.add("hidden");
   }, 1500);
+}
+
+function setValoracionFormEnabled(enabled) {
+  $("valoracionPublicacion").readOnly = true;
+  $("valoracionReceptor").readOnly = true;
+
+  els.valoracionPuntuacion.disabled = !enabled;
+  els.valoracionComentario.disabled = !enabled;
+  els.btnRegistrarValoracion.disabled = !enabled;
 }
 
 function escapeHtml(value) {
@@ -346,6 +358,8 @@ function prepararValoracion(publicacion) {
   } else if (publicacion.tipoPublicacion === "OFERTA") {
     $("valoracionReceptor").value = publicacion.idUsuarioCreador;
   }
+
+  setValoracionFormEnabled(true);
 
   const nombreSolicitante = `${solicitudAceptada.nombreSolicitante || ""} ${solicitudAceptada.apellidosSolicitante || ""}`.trim();
 
@@ -699,6 +713,7 @@ els.valoracionForm.addEventListener("submit", async (event) => {
     showMessage("Valoración registrada correctamente.");
     showToast("Valoración registrada correctamente.");
     els.valoracionForm.reset();
+    setValoracionFormEnabled(false);
     await cargarValoraciones();
     await cargarPuntos();
     await cargarPerfil();
@@ -936,6 +951,7 @@ $("btnLoadAdminCategorias").addEventListener("click", renderAdminCategorias);
 
 document.addEventListener("DOMContentLoaded", async () => {
   updateSessionStatus();
+  setValoracionFormEnabled(false);
   await cargarCategorias();
   await cargarPublicaciones();
   renderPerfil();

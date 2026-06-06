@@ -226,3 +226,9 @@ th { background: #f8fafc; color: #334155; }
 .toast.success {
   background: var(--success);
 }
+
+input[readonly],
+button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
