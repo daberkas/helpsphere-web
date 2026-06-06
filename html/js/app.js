@@ -1,3 +1,4 @@
+// Configuración de la URL de la API según el entorno (local o producción)
 const API_URL = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost"
   ? "https://localhost:7264/api"
   : "https://api.daberkas.com/api";
@@ -44,6 +45,7 @@ const els = {
   btnCancelEdit: $("btnCancelEdit")
 };
 
+// Funciones auxiliares para gestionar la sesión del usuario en localStorage
 function getToken() { return localStorage.getItem(tokenKey); }
 function getUser() {
   try { return JSON.parse(localStorage.getItem(userKey)); }
@@ -127,6 +129,7 @@ function updateSessionStatus() {
   }
 }
 
+//Función genérica para hacer peticiones HTTP a la API REST con manejo de errores y token de autenticación
 async function apiRequest(endpoint, options = {}) {
   const token = getToken();
   const headers = { "Content-Type": "application/json", ...(options.headers || {}) };
@@ -171,6 +174,8 @@ els.btnLogout.addEventListener("click", () => {
 els.btnScrollPublicaciones.addEventListener("click", () => $("publicacionesSection").scrollIntoView({ behavior: "smooth" }));
 els.btnScrollPanel.addEventListener("click", () => $("panel").scrollIntoView({ behavior: "smooth" }));
 
+// Inicio de sesión mediante autenticación Firebase, obteniendo el token JWT del backend y almacenándolo en localStorage 
+// para su uso en futuras peticiones a la API REST
 els.loginForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   const body = { email: $("loginEmail").value.trim(), password: $("loginPassword").value };
@@ -189,6 +194,8 @@ els.loginForm.addEventListener("submit", async (event) => {
   }
 });
 
+// Registro de nuevo usuario en la plataforma mediante autenticación Firebase, obteniendo el token JWT del backend y 
+// almacenándolo en localStorage para su uso en futuras peticiones a la API REST
 els.registerForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   const body = {
@@ -249,6 +256,9 @@ async function cargarCategorias() {
   }
 }
 
+// Carga y representación de las publicaciones, con filtros de texto, categoría y tipo de publicación. 
+// Se muestran botones de acción según el estado de la publicación y la relación del usuario con ella 
+// (creador, participante aceptado, etc.)
 async function cargarPublicaciones() {
   try {
     publicacionesCache = await apiRequest("/publicaciones");
@@ -340,6 +350,7 @@ els.publicacionesContainer.addEventListener("click", async (event) => {
   if (action === "valorar") prepararValoracion(publicacion);
 });
 
+// Prepara el formulario de valoración para registrar una nueva valoración asociada a una publicación completada.
 function prepararValoracion(publicacion) {
   const solicitudAceptada = solicitudesCache.find((s) =>
     Number(s.idPublicacion) === Number(publicacion.idPublicacion) &&
@@ -373,6 +384,9 @@ function prepararValoracion(publicacion) {
   els.valoracionForm.scrollIntoView({ behavior: "smooth", block: "center" });
 }
 
+// Permite al usuario solicitar participación en una publicación, enviando un mensaje al creador. 
+// Solo disponible para usuarios autenticados. Después de enviar la solicitud, se recargan las solicitudes 
+// para actualizar su estado en la interfaz.
 async function solicitarParticipacion(idPublicacion) {
   if (!requireLogin()) return;
   const mensaje = prompt("Mensaje para el creador de la publicación:", "Hola, me gustaría participar en esta ayuda.");
@@ -567,6 +581,8 @@ async function cancelarSolicitud(id) {
   }
 }
 
+// Consulta y actualización del perfil del usuario autenticado. Si el usuario no ha iniciado sesión, 
+// se muestra un mensaje indicándolo.
 async function cargarPerfil() {
   const user = getUser();
   if (!getToken() || !user?.idUsuario) {
@@ -628,6 +644,9 @@ els.perfilForm.addEventListener("submit", async (event) => {
   }
 });
 
+// Obtiene los movimientos de puntos asociados al usuario autenticado y los muestra en la interfaz. 
+// Si el usuario no ha iniciado sesión, se muestra un mensaje indicándolo. Cada movimiento muestra su tipo, 
+// cantidad de puntos y fecha. También se muestra el saldo actual de puntos del usuario.
 async function cargarPuntos() {
   if (!getToken()) {
     renderPuntos([]);
@@ -723,6 +742,9 @@ els.valoracionForm.addEventListener("submit", async (event) => {
     console.error(error);
   }
 });
+
+// Funcionalidades exclusivas para administradores: gestión de usuarios, roles y categorías. 
+// Solo los usuarios con rol de administrador pueden acceder a estas funcionalidades.
 function esAdmin() {
   const user = getUser();
   return Number(user?.idRol) === 1;
@@ -949,6 +971,9 @@ $("btnLoadUsuarios").addEventListener("click", cargarUsuarios);
 $("btnLoadRoles").addEventListener("click", cargarRoles);
 $("btnLoadAdminCategorias").addEventListener("click", renderAdminCategorias);
 
+//Inicialización de la aplicación: se actualiza el estado de sesión, se cargan las categorías y publicaciones 
+// para mostrar en la interfaz. También se cargan las solicitudes, puntos y valoraciones asociadas al usuario autenticado, 
+// aunque no es necesario esperar a que se completen para mostrar la interfaz principal.
 document.addEventListener("DOMContentLoaded", async () => {
   updateSessionStatus();
   setValoracionFormEnabled(false);
