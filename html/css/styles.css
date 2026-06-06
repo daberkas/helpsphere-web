@@ -200,3 +200,7 @@ th { background: #f8fafc; color: #334155; }
   .container { padding: 0 1rem 2rem; }
   .hero { padding-top: 2rem; }
 }
+
+#valoracionesContainer {
+    margin-top: 2rem;
+}
