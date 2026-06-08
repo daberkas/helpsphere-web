@@ -430,7 +430,11 @@ els.btnCancelEdit.addEventListener("click", limpiarFormularioPublicacion);
 
 els.publicacionForm.addEventListener("submit", async (event) => {
   event.preventDefault();
-  if (!requireLogin()) return;
+  
+  if (!requireLogin()) {
+    limpiarFormularioPublicacion();
+    return;
+  }
 
   const id = els.editPublicacionId.value;
   const fechaServicioValue = $("fechaServicio").value;
