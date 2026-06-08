@@ -415,7 +415,7 @@ function prepararEdicion(p) {
   $("zona").value = p.zona || "";
   $("puntosEstimados").value = p.puntosEstimados || 0;
   $("estadoPublicacion").value = p.estado || "ABIERTA";
-  $("fechaServicio").value = p.fechaServicio ? new Date(p.fechaServicio).toISOString().slice(0, 16) : "";
+  $("fechaServicio").value = p.fechaServicio ? p.fechaServicio.slice(0, 16) : "";
   els.btnCancelEdit.classList.remove("hidden");
   els.publicacionForm.scrollIntoView({ behavior: "smooth" });
 }
@@ -430,7 +430,7 @@ els.btnCancelEdit.addEventListener("click", limpiarFormularioPublicacion);
 
 els.publicacionForm.addEventListener("submit", async (event) => {
   event.preventDefault();
-  
+
   if (!requireLogin()) {
     limpiarFormularioPublicacion();
     return;
@@ -446,7 +446,7 @@ els.publicacionForm.addEventListener("submit", async (event) => {
     zona: $("zona").value.trim(),
     puntosEstimados: Number($("puntosEstimados").value),
     estado: $("estadoPublicacion").value,
-    fechaServicio: fechaServicioValue ? new Date(fechaServicioValue).toISOString() : null,
+    fechaServicio: fechaServicioValue ? `${fechaServicioValue}:00` : null,
     idCategoria: Number($("categoria").value)
   };
 
